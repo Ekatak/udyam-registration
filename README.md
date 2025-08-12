@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Sure! Here’s a professional and clear **README.md** for your Udyam Registration project that you can use as the main repo readme:
 
 ````markdown
@@ -137,3 +138,6 @@ For any questions or support, contact:[ektak248@gmail.com]
 
 If you want, I can help you generate your `.env.example` or docker files next!
 ```
+=======
+# udyam-registration
+>>>>>>> cc529d4a93f2b6fed70ba1200b08510ba07d177e
