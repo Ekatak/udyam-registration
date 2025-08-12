@@ -141,3 +141,21 @@ If you want, I can help you generate your `.env.example` or docker files next!
 =======
 # udyam-registration
 >>>>>>> cc529d4a93f2b6fed70ba1200b08510ba07d177e
+
+
+
+SAMPLE OF MY PROJECT
++++++++++++++++++++++++++++
+
+
+
+<img width="1307" height="857" alt="Screenshot 2025-08-13 002749" src="https://github.com/user-attachments/assets/e218c9d9-bd2b-4605-8db2-077ee11b6949" />
+
+
+<img width="1870" height="891" alt="Screenshot 2025-08-13 002741" src="https://github.com/user-attachments/assets/23cc3458-b452-4cd6-840c-68f65e1e4d94" />
+
+
+
+
+
+<img width="1855" height="895" alt="Screenshot 2025-08-13 002636" src="https://github.com/user-attachments/assets/98d797e2-85a0-4f23-af93-43d29f5076dd" />
