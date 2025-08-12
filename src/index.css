@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Udyam Registration Form Design System */
+
+@layer base {
+  :root {
+    /* Government portal inspired colors - Indian flag inspired */
+    --background: 0 0% 98%;
+    --foreground: 220 20% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 14%;
+
+    /* Primary - Government orange/saffron */
+    --primary: 22 93% 58%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 22 93% 65%;
+
+    /* Secondary - Government green */
+    --secondary: 138 60% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent - Indian blue */
+    --accent: 210 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 0 0% 100%;
+    --ring: 22 93% 58%;
+
+    --radius: 0.75rem;
+
+    /* Form specific colors */
+    --form-bg: 0 0% 100%;
+    --form-border: 210 20% 88%;
+    --success: 138 60% 45%;
+    --warning: 45 93% 58%;
+    --info: 210 100% 50%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(22 93% 58%), hsl(22 93% 65%));
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 98%), hsl(210 20% 96%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 20% 98%));
+
+    /* Shadows */
+    --shadow-form: 0 4px 20px -2px hsl(22 93% 58% / 0.1);
+    --shadow-card: 0 2px 10px -1px hsl(220 20% 14% / 0.08);
+    --shadow-step: 0 1px 3px hsl(220 20% 14% / 0.12);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 20% 14%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 25% 16%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 25% 16%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 22 93% 58%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 22 93% 65%;
+
+    --secondary: 138 60% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 20% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 210 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 25%;
+    --input: 220 25% 16%;
+    --ring: 22 93% 58%;
+
+    /* Dark mode form colors */
+    --form-bg: 220 25% 16%;
+    --form-border: 220 20% 25%;
+    --gradient-card: linear-gradient(145deg, hsl(220 25% 16%), hsl(220 20% 18%));
+    --shadow-form: 0 4px 20px -2px hsl(22 93% 58% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  .form-container {
+    background: var(--gradient-hero);
+    min-height: 100vh;
+  }
+
+  .form-card {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-form);
+    transition: var(--transition-smooth);
+  }
+
+  .step-indicator {
+    transition: var(--transition-spring);
+  }
+
+  .step-active {
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-step);
+  }
+
+  .input-focused {
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+    border-color: hsl(var(--primary));
+  }
+
+  .success-state {
+    border-color: hsl(var(--success));
+    background-color: hsl(var(--success) / 0.05);
+  }
+
+  .error-state {
+    border-color: hsl(var(--destructive));
+    background-color: hsl(var(--destructive) / 0.05);
+  }
+
+  .otp-input {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+}

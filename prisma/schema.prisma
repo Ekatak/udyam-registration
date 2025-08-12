@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Registration {
+  id          Int      @id @default(autoincrement())
+  aadhaar     String   @unique
+  aadhaarName String
+  pan         String   @unique
+  panName     String
+  createdAt   DateTime @default(now())
+}
