@@ -9,21 +9,23 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
 interface AadhaarStepProps {
-  onNext: (data: { aadhaar: string; name: string }) => void;
+  onNext: (data: { aadhaar: string; name: string; mobile: string }) => void;
 }
 
 export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
   const [aadhaar, setAadhaar] = useState("");
   const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [requestId, setRequestId] = useState("");
+  const [requestId, setRequestId] = useState(""); // Here used to store mock OTP
   const { toast } = useToast();
 
   const validateAadhaar = (value: string): boolean => /^[0-9]{12}$/.test(value);
+  const validateMobile = (value: string): boolean => /^[0-9]{10}$/.test(value);
   const validateOtp = (value: string): boolean => /^[0-9]{6}$/.test(value);
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +33,14 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
     setAadhaar(value);
     if (errors.aadhaar && validateAadhaar(value)) {
       setErrors(prev => ({ ...prev, aadhaar: "" }));
+    }
+  };
+
+  const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setMobile(value);
+    if (errors.mobile && validateMobile(value)) {
+      setErrors(prev => ({ ...prev, mobile: "" }));
     }
   };
 
@@ -50,6 +60,9 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
     if (!name.trim()) {
       newErrors.name = "Name is required";
     }
+    if (!validateMobile(mobile)) {
+      newErrors.mobile = "Please enter a valid 10-digit mobile number";
+    }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -57,26 +70,14 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
 
     setIsLoading(true);
     try {
-      const response = await udyamApi.verifyAadhaarAndSendOtp(aadhaar, name);
-      if (response.success && response.data?.requestId) {
-        setIsOtpSent(true);
-        setRequestId(response.data.requestId);
-        toast({
-          title: "OTP Sent Successfully",
-          description: "Please check your registered mobile number for the OTP",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: response.message || "Failed to send OTP",
-          variant: "destructive",
-        });
-      }
-    } catch {
+      // Mock OTP generation
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      console.log("Generated OTP (for testing):", generatedOtp);
+      setRequestId(generatedOtp); // Store OTP for mock verification
+      setIsOtpSent(true);
       toast({
-        title: "Error",
-        description: "Failed to connect to backend. Please try again.",
-        variant: "destructive",
+        title: "OTP Sent (Mock)",
+        description: `Your OTP is ${generatedOtp} (check console for testing)`,
       });
     } finally {
       setIsLoading(false);
@@ -91,13 +92,30 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
 
     setIsVerifying(true);
     try {
+      // Mock verification
+      if (otp === requestId) {
+        toast({
+          title: "Verification Successful",
+          description: "Aadhaar verified successfully",
+        });
+        onNext({ aadhaar, name, mobile });
+      } else {
+        toast({
+          title: "Verification Failed",
+          description: "Invalid OTP",
+          variant: "destructive",
+        });
+      }
+
+      // For backend integration, uncomment this:
+      /*
       const response = await udyamApi.verifyOtp(aadhaar, otp, requestId);
       if (response.success) {
         toast({
           title: "Verification Successful",
           description: "Aadhaar verified successfully",
         });
-        onNext({ aadhaar, name });
+        onNext({ aadhaar, name, mobile });
       } else {
         toast({
           title: "Verification Failed",
@@ -105,6 +123,7 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
           variant: "destructive",
         });
       }
+      */
     } catch {
       toast({
         title: "Error",
@@ -132,6 +151,7 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
       <CardContent className="space-y-6">
         {!isOtpSent ? (
           <>
+            {/* Aadhaar Field */}
             <div className="space-y-2">
               <Label htmlFor="aadhaar" className="text-sm font-medium">
                 Aadhaar Number <span className="text-destructive">*</span>
@@ -143,13 +163,10 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
                   value={aadhaar}
                   onChange={handleAadhaarChange}
                   placeholder="Enter 12-digit Aadhaar number"
-                  className={cn(
-                    "transition-all duration-200",
-                    {
-                      "error-state": errors.aadhaar,
-                      "success-state": aadhaar && validateAadhaar(aadhaar) && !errors.aadhaar,
-                    }
-                  )}
+                  className={cn("transition-all duration-200", {
+                    "error-state": errors.aadhaar,
+                    "success-state": aadhaar && validateAadhaar(aadhaar) && !errors.aadhaar,
+                  })}
                 />
                 {aadhaar && validateAadhaar(aadhaar) && !errors.aadhaar && (
                   <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-success" />
@@ -158,6 +175,7 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
               {errors.aadhaar && <p className="text-sm text-destructive">{errors.aadhaar}</p>}
             </div>
 
+            {/* Name Field */}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium">
                 Name <span className="text-destructive">*</span>
@@ -174,19 +192,39 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
                     }
                   }}
                   placeholder="Enter your full name as per Aadhaar"
-                  className={cn(
-                    "transition-all duration-200",
-                    {
-                      "error-state": errors.name,
-                      "success-state": name.trim() && !errors.name,
-                    }
-                  )}
+                  className={cn("transition-all duration-200", {
+                    "error-state": errors.name,
+                    "success-state": name.trim() && !errors.name,
+                  })}
                 />
                 <User className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               </div>
               {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
             </div>
 
+            {/* Mobile Field */}
+            <div className="space-y-2">
+              <Label htmlFor="mobile" className="text-sm font-medium">
+                Mobile Number <span className="text-destructive">*</span>
+              </Label>
+              <div className="relative">
+                <Input
+                  id="mobile"
+                  type="text"
+                  value={mobile}
+                  onChange={handleMobileChange}
+                  placeholder="Enter 10-digit mobile number"
+                  className={cn("transition-all duration-200", {
+                    "error-state": errors.mobile,
+                    "success-state": mobile.length === 10 && !errors.mobile,
+                  })}
+                  maxLength={10}
+                />
+              </div>
+              {errors.mobile && <p className="text-sm text-destructive">{errors.mobile}</p>}
+            </div>
+
+            {/* Send OTP Button */}
             <Button
               onClick={sendOtp}
               disabled={isLoading}
@@ -220,13 +258,10 @@ export const AadhaarStep = ({ onNext }: AadhaarStepProps) => {
                 value={otp}
                 onChange={handleOtpChange}
                 placeholder="000000"
-                className={cn(
-                  "otp-input transition-all duration-200",
-                  {
-                    "error-state": errors.otp,
-                    "success-state": otp && validateOtp(otp) && !errors.otp,
-                  }
-                )}
+                className={cn("otp-input transition-all duration-200", {
+                  "error-state": errors.otp,
+                  "success-state": otp && validateOtp(otp) && !errors.otp,
+                })}
                 maxLength={6}
               />
               {errors.otp && <p className="text-sm text-destructive">{errors.otp}</p>}

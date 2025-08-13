@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { udyamApi } from "@/components/forms/ApiService";
+import { udyamApi, ApiResponse } from "@/components/forms/ApiService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,10 +50,9 @@ export const PanStep = ({ onComplete, aadhaarData }: PanStepProps) => {
 
     setIsVerifying(true);
     try {
-      const response = await udyamApi.verifyPan(pan, panName);
+      const response: ApiResponse = await udyamApi.verifyPan(pan, panName);
 
       if (response.success) {
-        // Optionally, do name match check
         const nameMatch =
           panName.toLowerCase().includes(aadhaarData.name.split(" ")[0].toLowerCase()) ||
           aadhaarData.name.toLowerCase().includes(panName.split(" ")[0].toLowerCase());
